@@ -1,7 +1,6 @@
 import json
 
-from flask import Flask
-from flask import render_template
+from flask import Flask, request, render_template
 
 from stravalib.client import Client
 
@@ -15,7 +14,10 @@ def fitness():
     c = Client(access_token=secret.ACCESS_TOKEN)
     athlete = c.get_athlete()
 
-    activities = list(c.get_activities())
+    limit = request.args.get("limit", None)
+    if limit:
+        limit = int(limit)
+    activities = list(c.get_activities(limit=limit))
 
     # Bit of a mess. Long run is 2. Old activities are 0, new activities are None
     ALLOWED_ACTIVITIES = [None, 0, 2, u"0", u"2"]
