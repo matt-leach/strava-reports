@@ -22,9 +22,7 @@ def fitness():
 
     activities = list(reversed([a for a in activities if a.average_heartrate and a.workout_type in ALLOWED_ACTIVITIES and a.type == "Run"]))
 
-    for a in activities:
-        if 1000 * float(a.average_speed) / (a.average_heartrate - 60) > 60:
-            print a.name
+    activities = [a for a in activities if a.average_heartrate > 100 and 1000 * float(a.average_speed) / (a.average_heartrate - 60) < 80]  # Sanity for me
 
     vals = [1000 * float(a.average_speed) / (a.average_heartrate - 60) for a in activities]
     names = ["{} {}".format(a.name, a.start_date) for a in activities]
