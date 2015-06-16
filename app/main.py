@@ -15,6 +15,11 @@ def fitness():
     athlete = c.get_athlete()
 
     limit = request.args.get("limit", None)
+    try:
+        smooth = int(request.args.get("smooth")) / 2
+    except:
+        smooth = 3
+
     if limit:
         limit = int(limit)
     activities = list(c.get_activities(limit=limit))
@@ -31,13 +36,13 @@ def fitness():
 
     smoothed_vals = []
     for index, val in enumerate(vals):
-        slice = vals[max(0, index-3):index+3]
+        slice = vals[max(0, index-smooth):index+smooth+1]
         smoothed_vals.append(sum(slice) / (0.0 + len(slice)))
 
     vals_and_dist = [(1000 * float(a.average_speed) / (a.average_heartrate - 60), float(a.distance)) for a in activities]
     dist_smoothed_vals = []
     for index, val in enumerate(vals):
-        slice = vals_and_dist[max(0, index-3):index+3]
+        slice = vals_and_dist[max(0, index-smooth):index+smooth+1]
         tot = 0
         dist = 0
         for run in slice:
