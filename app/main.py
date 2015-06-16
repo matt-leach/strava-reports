@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from flask import Flask, request, render_template
@@ -53,6 +54,31 @@ def fitness():
 
     data = [names, vals, smoothed_vals, dist_smoothed_vals]
     return render_template('index.html', data=data)
+
+
+@app.route("/mileage")
+def mileage():
+    c = Client(access_token=secret.ACCESS_TOKEN)
+
+    activities = list(c.get_activities(limit=1000))
+
+    date = activities[-1].start_date.date()
+    dates = []
+    week_vals = []
+    month_vals = []
+    while date <= datetime.datetime.now().date():
+        dates.append(datetime.datetime.combine(date, datetime.datetime.min.time()))
+        min_week_date = date - datetime.timedelta(days=7)
+        min_month_date = date - datetime.timedelta(days=30)
+        M_PER_MILE = 1609
+        week_vals.append(sum(float(a.distance) / M_PER_MILE for a in activities if a.start_date.date() <= date and a.start_date.date() > min_week_date))
+        month_vals.append((7 / 30.0) * sum(float(a.distance) / M_PER_MILE for a in activities if a.start_date.date() <= date and a.start_date.date() > min_month_date))
+
+        date += datetime.timedelta(days=1)
+
+    data = [dates, week_vals, month_vals]
+    return render_template('mileage.html', data=data)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
