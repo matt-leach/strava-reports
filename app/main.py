@@ -14,14 +14,15 @@ def fitness():
     c = Client(access_token=secret.ACCESS_TOKEN)
     athlete = c.get_athlete()
 
-    limit = request.args.get("limit", None)
+    try:
+        limit = int(request.args.get("limit"))
+    except (TypeError, ValueError):
+        limit = None
     try:
         smooth = int(request.args.get("smooth")) / 2
-    except:
+    except (ValueError, TypeError):
         smooth = 3
 
-    if limit:
-        limit = int(limit)
     activities = list(c.get_activities(limit=limit))
 
     # Bit of a mess. Long run is 2. Old activities are 0, new activities are None
