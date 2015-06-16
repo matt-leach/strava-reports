@@ -53,7 +53,7 @@ def fitness():
         dist_smoothed_vals.append(tot / float(dist))
 
     data = [names, vals, smoothed_vals, dist_smoothed_vals]
-    return render_template('index.html', data=data)
+    return render_template('fitness.html', data=data)
 
 
 @app.route("/mileage")
