@@ -34,7 +34,18 @@ def fitness():
         slice = vals[max(0, index-3):index+3]
         smoothed_vals.append(sum(slice) / (0.0 + len(slice)))
 
-    data = [names, vals, smoothed_vals]
+    vals_and_dist = [(1000 * float(a.average_speed) / (a.average_heartrate - 60), float(a.distance)) for a in activities]
+    dist_smoothed_vals = []
+    for index, val in enumerate(vals):
+        slice = vals_and_dist[max(0, index-3):index+3]
+        tot = 0
+        dist = 0
+        for run in slice:
+            tot += run[0] * run[1]
+            dist += run[1]
+        dist_smoothed_vals.append(tot / float(dist))
+
+    data = [names, vals, smoothed_vals, dist_smoothed_vals]
     return render_template('index.html', data=data)
 
 if __name__ == "__main__":

@@ -29,6 +29,16 @@
                 pointHighlightFill: "#fff",
                 pointHighlightStroke: "rgba(220,220,220,1)",
                 data: {{ data[2]|tojson|safe }}
+            },
+            {
+                label: "Dist Smoothed fitness",
+                fillColor: "rgba(0,220,0,0.2)",
+                strokeColor: "rgba(0,220,0,1)",
+                pointColor: "rgba(0,220,0,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: {{ data[3]|tojson|safe }}
             }
         ]
     };
