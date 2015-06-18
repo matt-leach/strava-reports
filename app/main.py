@@ -13,7 +13,7 @@ app.config.from_pyfile('settings.py')
 
 @app.before_request
 def redirect_not_logged_in():
-    if request.endpoint not in ["auth", "home"]:
+    if request.endpoint not in ["auth", "home"] and '/static/' not in request.path:
         if "token" not in session:
             return redirect("/")
 
