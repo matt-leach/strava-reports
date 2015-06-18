@@ -11,6 +11,13 @@ app = Flask(__name__)
 app.config.from_pyfile('settings.py')
 
 
+@app.before_request
+def redirect_not_logged_in():
+    if request.endpoint not in ["auth", "home"]:
+        if "token" not in session:
+            return redirect("/")
+
+
 @app.route("/")
 def home():
     url = Client().authorization_url(client_id=app.config['STRAVA_ID'],
