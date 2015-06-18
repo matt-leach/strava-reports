@@ -15,7 +15,15 @@
     <div class="container">
         {% if session.athlete %}
             {{ session.athlete.firstname }}
-            <img src="{{ session.athlete.picture }}"/>            
+            <img src="{{ session.athlete.picture }}"/>
+
+            <a href="/logout">
+                LOGOUT
+            </a>
+        {% else %}
+            {% if auth_url %}
+                <a href="{{ auth_url }}"><img src="{{ url_for('static', filename='StravaLogin.png') }}"/></a>
+            {% endif %}
         {% endif %}
     </div>
 

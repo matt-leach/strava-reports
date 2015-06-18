@@ -24,7 +24,7 @@ def home():
                                      redirect_uri="http://localhost:5000/auth",
                                      approval_prompt="force",
                                      )
-    return render_template('index.html', url=url)
+    return render_template('index.html', auth_url=url)
 
 
 @app.route("/auth")
