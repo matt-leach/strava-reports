@@ -1,19 +1,34 @@
 import datetime
 import json
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, session
 
 from stravalib.client import Client
 
-import secret
 
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
 
 
+@app.route("/")
+def home():
+    c = Client()
+    url = c.authorization_url(client_id=app.config['STRAVA_ID'], redirect_uri="http://localhost:5000/auth")
+    return render_template('index.html', url=url)
+
+
+@app.route("/auth")
+def auth():
+    code = request.args.get("code")
+    c = Client()
+    token = c.exchange_code_for_token(app.config['STRAVA_ID'], app.config['STRAVA_SECRET'], code)
+    session["token"] = token
+    return redirect("/")
+
+
 @app.route("/fitness")
 def fitness():
-    c = Client(access_token=secret.ACCESS_TOKEN)
+    c = Client(access_token=session["token"])
     athlete = c.get_athlete()
 
     try:
@@ -61,7 +76,7 @@ def fitness():
 def mileage():
     c = Client(access_token=secret.ACCESS_TOKEN)
 
-    activities = list(c.get_activities(limit=1000))
+    activities = list(c.get_activities(limit=200))
 
     date = activities[-1].start_date.date()
     dates = []

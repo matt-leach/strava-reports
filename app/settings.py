@@ -1,1 +1,1 @@
-from secret import SECRET_KEY
+from secret import *
