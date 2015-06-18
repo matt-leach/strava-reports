@@ -8,6 +8,7 @@ from stravalib.client import Client
 import secret
 
 app = Flask(__name__)
+app.config.from_pyfile('settings.py')
 
 
 @app.route("/fitness")
