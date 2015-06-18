@@ -1,5 +1,6 @@
 import datetime
 import json
+import requests
 
 from flask import Flask, request, render_template, redirect, session
 
@@ -12,20 +13,31 @@ app.config.from_pyfile('settings.py')
 
 @app.route("/")
 def home():
-    c = Client()
-    url = c.authorization_url(client_id=app.config['STRAVA_ID'], redirect_uri="http://localhost:5000/auth")
+    url = Client().authorization_url(client_id=app.config['STRAVA_ID'],
+                                     redirect_uri="http://localhost:5000/auth",
+                                     approval_prompt="force",
+                                     )
     return render_template('index.html', url=url)
 
 
 @app.route("/auth")
 def auth():
-    code = request.args.get("code")
-    c = Client()
-    token = c.exchange_code_for_token(app.config['STRAVA_ID'], app.config['STRAVA_SECRET'], code)
-    session["token"] = token
-    c.access_token = token
-    a = c.get_athlete()
+    try:
+        code = request.args["code"]
+        c = Client()
+        token = c.exchange_code_for_token(app.config['STRAVA_ID'], app.config['STRAVA_SECRET'], code)
+    except (KeyError, requests.exceptions.HTTPError):
+        return redirect("/")
+
+    session["token"] = c.access_token = token
+    a = c.get_athlete()  # Technically shouldn't be needed as the athlete details are returned in the oauth call
     session["athlete"] = {"firstname": a.firstname, "picture": a.profile_medium}
+    return redirect("/")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
     return redirect("/")
 
 
