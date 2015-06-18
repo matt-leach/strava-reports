@@ -23,6 +23,9 @@ def auth():
     c = Client()
     token = c.exchange_code_for_token(app.config['STRAVA_ID'], app.config['STRAVA_SECRET'], code)
     session["token"] = token
+    c.access_token = token
+    a = c.get_athlete()
+    session["athlete"] = {"firstname": a.firstname, "picture": a.profile_medium}
     return redirect("/")
 
 

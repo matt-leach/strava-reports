@@ -13,6 +13,13 @@
 
 <body>
     <div class="container">
+        {% if session.athlete %}
+            {{ session.athlete.firstname }}
+            <img src="{{ session.athlete.picture }}"/>            
+        {% endif %}
+    </div>
+
+    <div class="container">
         {% block content %}
         {% endblock %}
     </div>
