@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+    <h1>View by Day of Week</h1>
+    <canvas id="chart1" style="width: 100%; height: 1000px"></canvas>
+
+    <script>
+    // Get the context of the canvas element we want to select
+    var ctx = document.getElementById("chart1").getContext("2d");
+    var data = {
+        labels: {{ data[0]|tojson|safe }},
+        datasets: [
+            {
+                label: "Week",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: {{ data[1]|tojson|safe }}
+            }
+        ]
+    };
+    var options = {
+    };
+    var myBar = new Chart(ctx).Bar(data, options);
+    </script>
+
+
+{% endblock %}

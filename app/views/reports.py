@@ -7,6 +7,23 @@ from main import app
 from stravalib.client import Client
 
 
+@app.route("/mileage2")
+def mileage2():
+    c = Client(access_token=session["token"])
+    activities = list(c.get_activities())
+
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    sums = [0] * 7
+    for a in activities:
+        if a.type != "Run":
+            continue
+        sums[a.start_date.weekday()] += float(a.distance) / 1609.0
+
+    data = [days_of_week, sums]
+
+    return render_template('mileage2.html', data=data)
+
+
 @app.route("/fitness")
 def fitness():
     c = Client(access_token=session["token"])
