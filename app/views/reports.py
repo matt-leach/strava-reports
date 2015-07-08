@@ -71,9 +71,13 @@ def fitness():
 
 @app.route("/mileage")
 def mileage():
-    c = Client(access_token=secret.ACCESS_TOKEN)
+    c = Client(access_token=session['token'])
+    try:
+        limit = int(request.args.get("limit"))
+    except (TypeError, ValueError):
+        limit = None
 
-    activities = list(c.get_activities(limit=200))
+    activities = list(c.get_activities(limit=limit))
 
     date = activities[-1].start_date.date()
     dates = []
