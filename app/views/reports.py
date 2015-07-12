@@ -7,8 +7,8 @@ from main import app
 from stravalib.client import Client
 
 
-@app.route("/mileage2")
-def mileage2():
+@app.route("/mileage")
+def mileage():
     c = Client(access_token=session["token"])
     activities = list(c.get_activities())
 
@@ -21,7 +21,7 @@ def mileage2():
 
     data = [days_of_week, sums]
 
-    return render_template('mileage2.html', data=data)
+    return render_template('mileage.html', data=data)
 
 
 @app.route("/fitness")
