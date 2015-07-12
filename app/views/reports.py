@@ -11,7 +11,8 @@ from stravalib.client import Client
 @app.route("/mileage")
 def mileage():
     c = Client(access_token=session["token"])
-    activity_models = list(c.get_activities(limit=100))
+    limit = int(request.args.get("limit", 200))
+    activity_models = list(c.get_activities(limit=limit))
 
     activities = []
     for a in activity_models:
