@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from flask import request, render_template, session
 
@@ -10,16 +11,20 @@ from stravalib.client import Client
 @app.route("/mileage")
 def mileage():
     c = Client(access_token=session["token"])
-    activities = list(c.get_activities())
+    activity_models = list(c.get_activities(limit=100))
 
-    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    sums = [0] * 7
-    for a in activities:
-        if a.type != "Run":
-            continue
-        sums[a.start_date.weekday()] += float(a.distance) / 1609.0
+    activities = []
+    for a in activity_models:
+        activities.append({
+                           "name": a.name,
+                           "distance": float(a.distance),
+                           "time": a.moving_time.seconds,
+                           "type": a.type,
+                           "date": a.start_date.isoformat(),
+                           "day": a.start_date.weekday()
+                          })
 
-    data = [days_of_week, sums]
+    data = json.dumps(activities)
 
     return render_template('mileage.html', data=data)
 
