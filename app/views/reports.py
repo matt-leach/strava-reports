@@ -69,8 +69,8 @@ def fitness():
     return render_template('fitness.html', data=data)
 
 
-@app.route("/mileage")
-def mileage():
+@app.route("/freshness")
+def freshness():
     c = Client(access_token=session['token'])
     try:
         limit = int(request.args.get("limit"))
@@ -94,4 +94,4 @@ def mileage():
         date += datetime.timedelta(days=1)
 
     data = [dates, week_vals, month_vals]
-    return render_template('mileage.html', data=data)
+    return render_template('freshness.html', data=data)

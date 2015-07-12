@@ -19,6 +19,7 @@
 
             <ul class="right hide-on-med-and-down valign-wrapper">
                 {% if session.athlete %}
+                    <li><a href="/freshness?limit=300">Freshness</a></li>
                     <li><a href="/fitness?limit=100">Fitness</a></li>
                     <li><img class="valign profilepic" src="{{ session.athlete.picture }}" title="Logged in as {{ session.athlete.firstname }}"></li>
                     <li><a href="/logout">Logout</a></li>
